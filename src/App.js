@@ -39,7 +39,7 @@ class App extends Component {
         <input type="text" value={this.state.input} onChange={e => this.setState({ imput: e.target.value })}></input>
         <button onClick={this.addTodo.bind(this, this.state.imput)}>Add task</button>
         <ul>
-          {this.state.todos.map(el => <li key={el.id}>{el.name}</li>)}
+          {this.state.todos.map(el => <li key={el.id}>{el.name}<button onClick={this.deleteTodo.bind(this, el.id)}>delete</button></li>)}
         </ul>
       </div>
     );

@@ -35,12 +35,16 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <input type="text" value={this.state.input} onChange={e => this.setState({ imput: e.target.value })}></input>
-        <button onClick={this.addTodo.bind(this, this.state.imput)}>Add task</button>
-        <ul>
-          {this.state.todos.map(el => <li key={el.id}>{el.name}<button onClick={this.deleteTodo.bind(this, el.id)}>delete</button></li>)}
-        </ul>
+      <div className="App application-container container">
+        <div className="row">
+          <div className="col-md-4 offset-md-4">
+            <input type="text" value={this.state.input} onChange={e => this.setState({ imput: e.target.value })}></input>
+            <button onClick={this.addTodo.bind(this, this.state.imput)}>Add task</button>
+            <ul className="list-group">
+              {this.state.todos.map(el => <li className="list-group-item" key={el.id}>{el.name}<button onClick={this.deleteTodo.bind(this, el.id)}>delete</button></li>)}
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

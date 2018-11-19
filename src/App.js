@@ -1,12 +1,39 @@
 import React, { Component } from 'react';
 import uniqid from 'uniqid';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import './App.css';
+
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
 
 class App extends Component {
 
   state = {
     todos: []
+  }
+
+  onDragEnd(result) {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const todos = reorder(
+      this.state.todos,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.setState({
+      todos,
+    });
   }
 
   // add todo item method
@@ -35,6 +62,9 @@ class App extends Component {
 
   render() {
     return (
+
+
+
       <div className="App application-container container">
         <div className="row">
           <div className="col-md-4 offset-md-4">
@@ -48,10 +78,31 @@ class App extends Component {
                   </div>
                 </div>
 
+                <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
+                  <Droppable droppableId="droppable">
+                    {(provided, snapshot) => (
+                      <div ref={provided.innerRef} >
+                        <ul className="list-group">
+                          {this.state.todos.map((item, index) => (
+                            <Draggable key={item.id} draggableId={item.id} index={index}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                >
+                                  <li className="list-group-item" >{item.name}<button className="btn btn-danger float-right" onClick={this.deleteTodo.bind(this, item.id)}>Delete</button></li>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </ul>
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
 
-                <ul className="list-group">
-                  {this.state.todos.map(el => <li className="list-group-item" key={el.id}>{el.name}<button className="btn btn-danger float-right" onClick={this.deleteTodo.bind(this, el.id)}>Delete</button></li>)}
-                </ul>
               </div>
             </div>
           </div>
